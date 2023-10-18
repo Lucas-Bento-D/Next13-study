@@ -45,6 +45,8 @@ assim /dashboard terá um layout especifico assim como todas as rotas filhas de 
 
 O /dashboard/analytics herdará o layout que está em dashboard e assim por diante.
 
+O arquivo "layout.tsx" da raiz precisa ter as tags <html><body>
+
 # Links e Navegação
 
 Primeiro de tudo, porque usar o link?
@@ -69,6 +71,61 @@ Também conseguimos usar o componente assim:
 Nessa forma, nós conseguimos trabalhar com as partes da url de forma separada, como o pathname, query e etc. Esse jeito é bom para quando vamos usar hooks.
 
 O componente Link tem outro parametro legal de trabalhar que é o "replace", ele é responsavel por alterar a url no historico do browse, sem adicionar uma nova url quando clica no link.
+
+# Router Groups
+
+Ignorando seguimentos de url por pastas:
+Se nomearmos a pasta pai com "()" ela será ignorada na url.
+exemplo:
+    app
+    --marketing
+    ----blog
+    Terá a url -> /marketing/blog
+
+    app
+    --(marketing)
+    ----blog
+    Terá a url /blog
+
+Quando adicionamos uma pasta ignorada na url, o arquivo "page.tsx" do nivel da pasta é ignorado, passando a valer(se houver) o "page.tsx" da pasta.
+
+Vale lembra que essa lógica se aplica caso tivermos duas pastas ignoradas, por exemplo:
+Temos a seguinte estrutura:
+
+    app
+    --(marketing)
+    ----blog
+    --page.tsx
+
+    --(shop)
+    ----cart
+    --page.tsx
+    page.tsx
+
+Nesse contexto teremos 1 erro acontecendo 2 vezes, que é algo como:
+"You cannot have two parallel pages that resolve to the same path. Please check[...]"
+E para resolução desse ponto, precisaremos ter apenas um "page.tsx" para aquele nivel, sendo algo como:
+    app
+    --(marketing)
+    ----blog
+    --page.tsx
+
+    --(shop)
+    ----cart
+Vale salientar que "--page.tsx" e "page.tsx" tem o mesmo nivel nesse contexto por que estamos ignorando marketing e shop e um dos pincipios mais basicos dos next13.4+ é ter só 1 "page.tsx" por nivel.
+
+Para fins de organização, com o conhecimento que eu tenho hoje sobre next, eu faria da seguinte forma:
+
+    app
+    --(marketing)
+    ----blog
+
+    --(shop)
+    ----cart
+    page.tsx
+Na minha mente, pastas ignoradas na url devem ficar sem o "page.tsx", deixando somente na pasta pai, com isso temos uma organização de pastas mais "intuítivo"
+
+Por outro lado, essa pasta ignorada pode ter "layout.tsx" trazendo uma funcionalidade mais prática do que só organizar pastas.
 
 # Hooks - clients
 
