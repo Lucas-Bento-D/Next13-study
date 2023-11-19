@@ -127,6 +127,73 @@ Na minha mente, pastas ignoradas na url devem ficar sem o "page.tsx", deixando s
 
 Por outro lado, essa pasta ignorada pode ter "layout.tsx" trazendo uma funcionalidade mais prática do que só organizar pastas.
 
+# Rotas dinamicas 
+
+Como sabemos, em um projeto com NextJs, para rotas, nós somos orientados por pastas, ou seja:
+
+    blog
+    --post
+    ----page.tsx
+teriamos a url: /blog/post.
+
+- Mas como fariamos se a rota precisasse ser dynamica?
+No caso da rota dinamica, nós precisamos colocar o nome da pasta entre colchetes( [] ), com isso o NextJs vai entender que naquele ponto da rota, teremos um valor variavel, ou seja:
+    blog
+    --[postId]
+    ----page.tsx
+Nesse caso teriamos como url: /blog/{postId}, com o postId sendo qualquer valor.
+
+- Como fica o tratamento de varias rotas dinamicas?
+Para varias rotas que podem ser variaveis, precisamos tratar o nome da pasta com spread, para termos um array de rotas dinamicas, exemplo:
+    shop
+    --[...slug]
+    ----page.tsx
+Aqui poderemos ter /shop/path1/path2..... 
+se formos pegar os parametros da url, eles virão em um array, ou seja: ['path1', 'path2'....]
+Isso nos ajuda com o SEO e ajuda a tratar muitos paths dinamicos.
+
+- E se entrarmos em /shop ?
+Como essa pasta não tem um page.tsx, pegariamos um erro 404, porém, se tratarmos a pasta [...slug] diferente, poderemos acessar /shop sem problemas com o page que está dentro de [...slug], basta adicionar um colchete a mais no nome da pasta, ficando[[...slug]], porém vale salientar que quando fazermos isso, aquele array de path(falamos acima) e o parametro 'slug' no parametro 'params' da url vem vazio, vamos checar o retorno de forma visual:
+
+/shop/path1/path2
+Teremos {params: {slug: ['path1', 'path2']}}
+
+/shop
+Teremos {}
+
+Então temos que tomar cuidado com a lógica que iremos usar.
+
+
+# Meta dados
+
+Junto com as rotas dinamicas, também precisamos abordar a parte de meta dado, mas por que esse assunto é importante?
+Trabalhar com meta dados é importante para o SEO do seu site e ranqueamento em sites de busca, como google, e dependendo da página, teremos esses valores diferentes, exemplo:
+Em uma pagina de post de blog, poderemos ter o metadado de description o post da página, já em uma página do produto X, poderemos ter um description com a descrição desse produto, tudo isso no mesmo site.
+
+tá, e como fazemos isso no NextJs?
+No NextJs, temos a função generateMetadata() onde ela retorna um objeto que podemos ter "title" ou "description" por exemplo.
+Exemplo da função sendo aplicada:
+
+export async function generate metadata(){
+    return{
+        title: "pagina X",
+        description: "descrição da página X"
+    }
+}
+
+
+# Parametros estáticos 
+Precisamos falar também sobre a função generateStaticParams() que irá funcionar em conjunto das rotas dinamicas.
+Basicamente essa função irá "buildar"(não tenho certeza se esse é o termo correto) os parametros de possiveis páginas sobre determinada parte do seu site, exemplo de código:
+
+export async function generateStaticParams({params}: Iparams) {
+    const res = await fetch(`https://jsonplaceholder.typicode.com/posts/`)
+    const posts = await res.json()
+    return posts.map( (post: any) =>({
+        postId: String(post.id)
+    }))
+}
+
 # Hooks - clients
 
 ## usePathname()
