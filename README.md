@@ -194,6 +194,27 @@ export async function generateStaticParams({params}: Iparams) {
     }))
 }
 
+# Componente Loading
+O Next traz também um tratamento para o loading, tendo um arquivo com nome pré-definido chamado loading.{js | tsx}.
+Esse componente quanto a estruturação é normal, como page.tsx ou layout.tsx
+A função do loading é bem clara e simples, trazer uma estrutura de loading enquanto carrega o componente.
+
+Mas por que ele é bom?
+Ele é bom por trazer um "esqueleto do componente" ao invés de ficar travado visualmente para o usuario, melhorando a experiencia. 
+
+Observações
+O componente loading funciona para o carregamento de um componente e todos os componentes filhos desse mesmo, ou seja:
+
+componente X
+-componente Y
+--page.tsx
+-componente Z
+--page.tsx
+-loading.tsx
+-page.tsx
+
+Nesse caso o loading só irá parar de ser mostrado pro usuario quando o componente X, Y e Z forem carregados, quanto a filhos, funciona parecido com o layoutx.tsx, trazendo a ideia de herança.
+
 # Hooks - clients
 
 ## usePathname()
