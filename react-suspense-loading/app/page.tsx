@@ -1,9 +1,19 @@
-import Image from 'next/image'
+import Reviews from "./components/Reviews";
+import ProductLoading from "./components/loadings/ProductLoading";
+import ReviewsLoading from "./components/loadings/ReviewsLoading";
+import Product from "./components/products";
+import { Suspense } from "react";
 
 export default async function Home() {
-  
-  await new Promise( (resolve: any) => setTimeout(resolve, 4000))
   return (
-    <>Carregado!</>
+    <>
+      <Suspense fallback={<ProductLoading />}>
+        <Product />
+      </Suspense>
+      <br />
+      <Suspense fallback={<ReviewsLoading />}>
+        <Reviews />
+      </Suspense>
+    </>
   )
 }

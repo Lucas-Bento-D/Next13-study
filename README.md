@@ -215,6 +215,8 @@ componente X
 
 Nesse caso o loading só irá parar de ser mostrado pro usuario quando o componente X, Y e Z forem carregados, quanto a filhos, funciona parecido com o layoutx.tsx, trazendo a ideia de herança.
 
+
+
 # Hooks - clients
 
 ## usePathname()
